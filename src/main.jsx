@@ -22,14 +22,38 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Toaster
             position="top-right"
             toastOptions={{
+              duration: 3000,
               style: {
-                background: '#1a0800', color: '#fff',
+                background: '#1a0800',
+                color: '#fff',
                 border: '1px solid rgba(249,115,22,0.35)',
-                borderRadius: '12px', fontSize: '13px',
+                borderRadius: '12px',
+                fontSize: '13px',
               },
-              success: { iconTheme: { primary: '#f97316', secondary: '#1a0800' } },
-              error: { iconTheme: { primary: '#ef4444', secondary: '#1a0800' } },
-              loading: { iconTheme: { primary: '#f97316', secondary: '#1a0800' } },
+
+              success: {
+                duration: 3000,
+                iconTheme: {
+                  primary: '#f97316',
+                  secondary: '#1a0800',
+                },
+              },
+
+              error: {
+                duration: 4000,
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: '#1a0800',
+                },
+              },
+
+              loading: {
+                duration: 2000,
+                iconTheme: {
+                  primary: '#f97316',
+                  secondary: '#1a0800',
+                },
+              },
             }}
           />
           <App />
