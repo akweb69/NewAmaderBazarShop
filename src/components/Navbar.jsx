@@ -15,7 +15,8 @@ import { MdOutlineLocalShipping } from 'react-icons/md'
 import { IoBookSharp } from "react-icons/io5";
 
 
-import logo from "../assets/logo/image-removebg-preview (6).png"
+// import logo from "../assets/logo/image-removebg-preview (6).png"
+import useNavbarData from '../NewResellar/Hooks/useNavbarData'
 
 const navLinks = [
   { name: 'Home', path: '/', Icon: HiHome },
@@ -29,7 +30,7 @@ const navLinks = [
 // ── Animated fire dot ─────────────────────────────────────────────────────────
 const FireDot = () => (
   <motion.span
-    className="inline-flex text-orange-400 ml-1"
+    className="inline-flex text-green-400 ml-1"
     animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
     transition={{ duration: 1.4, repeat: Infinity }}
   >
@@ -48,8 +49,8 @@ const GlowBtn = ({ IconOutline, IconFilled, to, onClick, label, badge, active })
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.92 }}
       className="relative w-10 h-10 rounded-2xl flex items-center justify-center cursor-pointer
-        bg-white/[0.08] border border-orange-400/20 text-white/80
-        hover:bg-orange-500/20 hover:border-orange-400/50 hover:text-orange-300
+        bg-white/[0.08] border border-green-400/20 text-white/80
+        hover:bg-green-500/20 hover:border-green-400/50 hover:text-green-300
         transition-colors duration-200"
       aria-label={label}
     >
@@ -60,7 +61,7 @@ const GlowBtn = ({ IconOutline, IconFilled, to, onClick, label, badge, active })
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            className="absolute inset-0 rounded-2xl bg-orange-500/15 blur-sm"
+            className="absolute inset-0 rounded-2xl bg-green-500/15 blur-sm"
           />
         )}
       </AnimatePresence>
@@ -69,9 +70,9 @@ const GlowBtn = ({ IconOutline, IconFilled, to, onClick, label, badge, active })
         <motion.span
           initial={{ scale: 0 }} animate={{ scale: 1 }}
           className="absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-full
-            bg-gradient-to-br from-orange-400 to-red-500
+            bg-gradient-to-br from-green-400 to-teal-500
             text-white text-[9px] font-black flex items-center justify-center
-            shadow-lg shadow-orange-500/40 border border-orange-300/30 z-20"
+            shadow-lg shadow-green-500/40 border border-green-300/30 z-20"
         >
           {badge > 9 ? '9+' : badge}
         </motion.span>
@@ -85,13 +86,13 @@ const GlowBtn = ({ IconOutline, IconFilled, to, onClick, label, badge, active })
 // ── Search Bar ────────────────────────────────────────────────────────────────
 const SearchBar = ({ query, setQuery, onSubmit, onCamera, fileRef, className = '' }) => (
   <form onSubmit={onSubmit}
-    className={`flex items-center bg-white/[0.1] border border-orange-400/25 rounded-2xl
+    className={`flex items-center bg-white/[0.1] border border-green-400/25 rounded-2xl
       backdrop-blur-sm overflow-hidden
-      focus-within:border-orange-400/60 focus-within:bg-white/[0.14]
-      focus-within:shadow-lg focus-within:shadow-orange-500/15
+      focus-within:border-green-400/60 focus-within:bg-white/[0.14]
+      focus-within:shadow-lg focus-within:shadow-green-500/15
       transition-all duration-300 ${className}`}
   >
-    <HiSearch size={17} className="ml-4 text-orange-300/60 flex-shrink-0" />
+    <HiSearch size={17} className="ml-4 text-green-300/60 flex-shrink-0" />
     <input
       type="text"
       value={query}
@@ -108,14 +109,14 @@ const SearchBar = ({ query, setQuery, onSubmit, onCamera, fileRef, className = '
       </motion.button>
     )}
     {/* Divider */}
-    <span className="w-px h-5 bg-orange-400/20 flex-shrink-0 mx-1" />
+    <span className="w-px h-5 bg-green-400/20 flex-shrink-0 mx-1" />
     {/* Camera */}
     <motion.button
       type="button"
       onClick={() => fileRef.current?.click()}
       whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-      className="w-9 h-9 mr-1 rounded-xl bg-orange-500/20 border border-orange-400/20
-        text-orange-300 hover:bg-orange-500/35 hover:text-orange-200
+      className="w-9 h-9 mr-1 rounded-xl bg-green-500/20 border border-green-400/20
+        text-green-300 hover:bg-green-500/35 hover:text-green-200
         flex items-center justify-center transition-all duration-200 flex-shrink-0"
       aria-label="Image search"
     >
@@ -136,6 +137,8 @@ export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
   const fileRef = useRef(null)
+
+  const { logo, logoLoading } = useNavbarData()
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 12)
@@ -159,12 +162,11 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className={` z-50 transition-all duration-300
           ${scrolled
-            ? 'bg-[#0c0400]/90 backdrop-blur-2xl shadow-xl shadow-orange-500/10 border-b border-orange-500/15'
+            ? 'bg-[#0c0400]/90 backdrop-blur-2xl shadow-xl shadow-green-500/10 border-b border-green-500/15'
             : 'bg-gradient-to-b from-[#0c0400] to-[#0c0400]/95'
           }`}
       >
-        {/* ── Top thin accent line ── */}
-        {/* <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-70" /> */}
+
 
         <div className="max-w-[1440px] mx-auto px-4 sm:px-5 lg:px-8">
           <div className="flex items-center justify-between gap-3 md:gap-5 h-[64px] lg:h-[72px]">
@@ -174,9 +176,9 @@ export default function Navbar() {
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                 className="relative">
                 {/* Glow behind logo */}
-                <div className="absolute inset-0 blur-xl bg-orange-500/20 rounded-full scale-150 pointer-events-none" />
+                <div className="absolute inset-0 blur-xl bg-green-500/20 rounded-full scale-150 pointer-events-none" />
                 <img
-                  src={logo}
+                  src={logo[0]?.logo?.logo}
                   alt="AmaderBazarShop"
                   className="relative w-[110px] sm:w-[130px] md:w-[150px] h-auto object-contain drop-shadow-[0_0_12px_rgba(249,115,22,0.35)]"
                 />
@@ -200,10 +202,10 @@ export default function Navbar() {
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="ml-1">
                 <Link to="/cod_products"
                   className="relative flex items-center gap-1.5 px-4 py-2 rounded-xl
-                    bg-gradient-to-r from-orange-500 to-orange-600
+                    bg-gradient-to-r from-green-500 to-green-600
                     text-white text-[13px] font-bold tracking-wide
-                    shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50
-                    border border-orange-400/30 transition-all duration-200 overflow-hidden group">
+                    shadow-lg shadow-green-500/30 hover:shadow-green-500/50
+                    border border-green-400/30 transition-all duration-200 overflow-hidden group">
                   {/* Shimmer */}
                   <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <HiShoppingBag size={15} className="relative z-10 flex-shrink-0" />
@@ -218,8 +220,8 @@ export default function Navbar() {
               <motion.button
                 onClick={() => setIsOpen(!isOpen)}
                 whileTap={{ scale: 0.9 }}
-                className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-orange-400/20
-                  text-white/80 hover:bg-orange-500/20 hover:text-orange-300 hover:border-orange-400/50
+                className="w-10 h-10 rounded-2xl bg-white/[0.08] border border-green-400/20
+                  text-white/80 hover:bg-green-500/20 hover:text-green-300 hover:border-green-400/50
                   flex items-center justify-center transition-all duration-200"
                 aria-label="Menu"
               >
@@ -246,7 +248,7 @@ export default function Navbar() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="md:hidden border-t border-orange-500/15 bg-[#0c0400]/98 backdrop-blur-2xl overflow-hidden"
+              className="md:hidden border-t border-green-500/15 bg-[#0c0400]/98 backdrop-blur-2xl overflow-hidden"
             >
               <div className="px-4 py-4 space-y-3">
 
@@ -269,7 +271,7 @@ export default function Navbar() {
                         <Link to={path}
                           className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-200
                             ${isActive
-                              ? 'bg-orange-500/20 text-orange-400 border border-orange-500/25'
+                              ? 'bg-green-500/20 text-green-400 border border-green-500/25'
                               : 'text-white/55 bg-white/[0.04] border border-white/5 hover:bg-white/[0.08] hover:text-white/80'
                             }`}>
                           <Icon size={15} className="flex-shrink-0" />
@@ -287,8 +289,8 @@ export default function Navbar() {
                   <GlowBtn IconOutline={BsPerson} IconFilled={BsPersonFill} to="/account" label="Account" />
                   <Link to="/cod_products"
                     className="ml-auto flex items-center gap-2 px-5 py-2.5 rounded-xl
-                      bg-gradient-to-r from-orange-500 to-orange-600 text-white text-[13px] font-bold
-                      shadow-lg shadow-orange-500/30 border border-orange-400/30 transition-all hover:shadow-orange-500/50">
+                      bg-gradient-to-r from-green-500 to-green-600 text-white text-[13px] font-bold
+                      shadow-lg shadow-green-500/30 border border-green-400/30 transition-all hover:shadow-green-500/50">
                     <HiShoppingBag size={15} />
                     Shop Now
                   </Link>

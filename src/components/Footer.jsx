@@ -56,9 +56,9 @@ export default function Footer() {
               Premium digital products and website templates crafted for developers and businesses who demand excellence.
             </p>
             <div className="space-y-3">
-              <a href="mailto:hello@WebTahri.dev" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:hello@AmaderBazar.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <FiMail className="w-4 h-4" />
-                hello@WebTahri.dev
+                hello@AmaderBazar.com
               </a>
               <a href="tel:+1234567890" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
                 <FiPhone className="w-4 h-4" />
@@ -143,7 +143,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="py-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} WebTahri. All rights reserved.
+            © {new Date().getFullYear()} Amader Bazar. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             {socialLinks.map((social) => (
