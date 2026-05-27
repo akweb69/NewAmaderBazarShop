@@ -16,15 +16,12 @@ const AsideBar = () => {
     return (
         <div className="relative w-full h-full bg-white overflow-hidden select-none flex flex-col ">
 
-            {/* Ambient glow - softened for light theme */}
-            <div className="pointer-events-none absolute -top-16 -left-16 w-48 h-48 rounded-full bg-orange-500/10 blur-[60px]" />
-            <div className="pointer-events-none absolute bottom-0 right-0 w-32 h-32 rounded-full bg-amber-500/8 blur-[50px]" />
 
             {/* Header */}
             <div className="px-5 py-5 border-b border-slate-200 flex-shrink-0">
                 <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-lg bg-orange-100 border border-orange-200 flex items-center justify-center">
-                        <FiGrid size={13} className="text-orange-600" />
+                    <div className="w-7 h-7 rounded-lg bg-green-100 border border-green-200 flex items-center justify-center">
+                        <FiGrid size={13} className="text-green-600" />
                     </div>
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.18em]">
                         Categories
@@ -62,7 +59,7 @@ const AsideBar = () => {
                                     className={`w-full flex items-center justify-between py-2.5 px-3 rounded-xl
                                         transition-all duration-200 group relative overflow-hidden
                                         ${isOpen
-                                            ? 'bg-orange-50 border border-orange-200 text-orange-700 shadow-sm'
+                                            ? 'bg-green-50 border border-green-200 text-green-700 shadow-sm'
                                             : 'border border-transparent text-slate-600 hover:text-slate-800 hover:bg-slate-100 hover:border-slate-200'
                                         }`}
                                 >
@@ -70,7 +67,7 @@ const AsideBar = () => {
                                     {isOpen && (
                                         <motion.span
                                             layoutId={`cat-glow-${category._id}`}
-                                            className="absolute inset-0 bg-gradient-to-r from-orange-100 to-transparent rounded-xl pointer-events-none"
+                                            className="absolute inset-0 bg-gradient-to-r from-green-100 to-transparent rounded-xl pointer-events-none"
                                         />
                                     )}
 
@@ -78,8 +75,8 @@ const AsideBar = () => {
                                     <div className="flex items-center gap-2.5 relative z-10 min-w-0">
                                         <div className={`w-7 h-7 rounded-lg overflow-hidden flex-shrink-0 border transition-all duration-200
                                             ${isOpen
-                                                ? 'border-orange-300 ring-1 ring-orange-200'
-                                                : 'border-slate-200 group-hover:border-orange-200'
+                                                ? 'border-green-300 ring-1 ring-green-200'
+                                                : 'border-slate-200 group-hover:border-green-200'
                                             }`}>
                                             <img
                                                 className="w-full h-full object-cover"
@@ -94,15 +91,15 @@ const AsideBar = () => {
                                         </span>
 
                                         {/* Hot badge */}
-                                        {catIndex < 2 && (
+                                        {/* {catIndex < 2 && (
                                             <motion.span
                                                 animate={{ scale: [1, 1.15, 1] }}
                                                 transition={{ duration: 1.6, repeat: Infinity }}
-                                                className="text-orange-500"
+                                                className="text-green-500"
                                             >
                                                 <RiFireFill size={11} />
                                             </motion.span>
-                                        )}
+                                        )} */}
                                     </div>
 
                                     {/* Right Side */}
@@ -110,8 +107,8 @@ const AsideBar = () => {
                                         {hasSubcategories && (
                                             <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md transition-all duration-200
                                                 ${isOpen
-                                                    ? 'bg-orange-100 text-orange-600'
-                                                    : 'bg-slate-100 text-slate-400 group-hover:bg-orange-100 group-hover:text-orange-500'
+                                                    ? 'bg-green-100 text-green-600'
+                                                    : 'bg-slate-100 text-slate-400 group-hover:bg-green-100 group-hover:text-green-500'
                                                 }`}>
                                                 {category.subcategories.length}
                                             </span>
@@ -119,7 +116,7 @@ const AsideBar = () => {
                                         <motion.span
                                             animate={{ rotate: isOpen ? 90 : 0 }}
                                             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                                            className={`transition-colors ${isOpen ? 'text-orange-500' : 'text-slate-300 group-hover:text-slate-400'}`}
+                                            className={`transition-colors ${isOpen ? 'text-green-500' : 'text-slate-300 group-hover:text-slate-400'}`}
                                         >
                                             <FiChevronRight size={13} />
                                         </motion.span>
@@ -149,7 +146,7 @@ const AsideBar = () => {
                                                         onHoverStart={() => setHoveredSub(`${category._id}-${idx}`)}
                                                         onHoverEnd={() => setHoveredSub(null)}
                                                         className="relative text-left text-[12px] font-medium py-1.5 px-2.5 rounded-lg
-                                                            text-slate-600 hover:text-orange-700 hover:bg-orange-50
+                                                            text-slate-600 hover:text-green-700 hover:bg-green-50
                                                             transition-all duration-150 group/sub"
                                                     >
                                                         {/* Connector dot */}
@@ -165,7 +162,7 @@ const AsideBar = () => {
 
                                                         <span className="relative">
                                                             {sub}
-                                                            <span className="absolute bottom-0 left-0 h-px bg-orange-400 w-0 group-hover/sub:w-full transition-all duration-200" />
+                                                            <span className="absolute bottom-0 left-0 h-px bg-green-400 w-0 group-hover/sub:w-full transition-all duration-200" />
                                                         </span>
                                                     </motion.button>
                                                 ))}
