@@ -40,7 +40,7 @@ const BottomNavbar = () => {
                             {isActive && (
                                 <motion.div
                                     layoutId="activePill"
-                                    className="absolute inset-0 mx-auto w-10 h-10 bg-orange-500/10 rounded-xl -z-10"
+                                    className="absolute inset-0 mx-auto w-10 h-10 bg-green-500/10 rounded-xl -z-10"
                                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                                 />
                             )}
@@ -52,14 +52,14 @@ const BottomNavbar = () => {
                                     y: isActive ? -2 : 0,
                                 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                                className={`relative p-1 rounded-lg ${isActive ? 'text-orange-500' : 'text-gray-400 group-hover:text-gray-600'
+                                className={`relative p-1 rounded-lg ${isActive ? 'text-green-500' : 'text-gray-400 group-hover:text-gray-600'
                                     }`}
                             >
                                 <Icon className="w-5 h-5 stroke-[2.2]" />
 
                                 {/* Optional Badge (e.g., Cart count) */}
                                 {item.badge && (
-                                    <span className="absolute -top-1 -right-1.5 bg-orange-500 text-white text-[10px] font-bold font-sans rounded-full h-4 w-4 flex items-center justify-center ring-2 ring-white">
+                                    <span className="absolute -top-1 -right-1.5 bg-green-500 text-white text-[10px] font-bold font-sans rounded-full h-4 w-4 flex items-center justify-center ring-2 ring-white">
                                         {item.badge}
                                     </span>
                                 )}
@@ -67,7 +67,7 @@ const BottomNavbar = () => {
 
                             {/* Label */}
                             <span
-                                className={`text-[10px] font-medium mt-1 font-sans tracking-wide transition-colors duration-200 ${isActive ? 'text-orange-600 font-semibold' : 'text-gray-400'
+                                className={`text-[10px] font-medium mt-1 font-sans tracking-wide transition-colors duration-200 ${isActive ? 'text-green-600 font-semibold' : 'text-gray-400'
                                     }`}
                             >
                                 {item.label}
@@ -77,7 +77,7 @@ const BottomNavbar = () => {
                             {isActive && (
                                 <motion.div
                                     layoutId="activeDot"
-                                    className="absolute bottom-[-4px] w-1 h-1 bg-orange-500 rounded-full"
+                                    className="absolute bottom-[-4px] w-1 h-1 bg-green-500 rounded-full"
                                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                                 />
                             )}

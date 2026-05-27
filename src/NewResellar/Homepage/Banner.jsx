@@ -13,7 +13,7 @@ const Banner = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [current, setCurrent] = useState(0);
-    const [direction, setDirection] = useState(1); // 1 = forward, -1 = backward
+    const [direction, setDirection] = useState(1);
     const [paused, setPaused] = useState(false);
     const timerRef = useRef(null);
 
