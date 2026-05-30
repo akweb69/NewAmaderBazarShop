@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import useCategories from '../Hooks/Categories';
+import { useNavigate } from 'react-router-dom';
 
 const TopCategories = () => {
     const {
@@ -10,6 +11,8 @@ const TopCategories = () => {
         error,
         refetch,
     } = useCategories();
+
+    const navigate = useNavigate();
 
     // Framer Motion Animation Variants
     const containerVariants = {
@@ -70,7 +73,7 @@ const TopCategories = () => {
 
     // 3. Main Render
     return (
-        <div className="w-full p-4 bg-slate-50/30">
+        <div className="w-full hidden md:block p-4 bg-slate-50/30">
             <div className="max-w-7xl mx-auto bg-white border border-emerald-100/60 shadow-[0_4px_20px_-4px_rgba(16,185,129,0.05)] rounded-2xl p-6 text-slate-800">
 
                 {/* Header Section */}
@@ -82,100 +85,55 @@ const TopCategories = () => {
                     <p className="text-xs text-slate-500 mt-1">Explore our most popular categories</p>
                 </div>
 
-                <div className="hidden md:block">
-                    {categories.length > 0 ? (
-                        <motion.div
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="show"
-                            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
-                        >
-                            {categories.map((cat, idx) => (
-                                <motion.div
-                                    key={cat?._id || idx}
-                                    variants={itemVariants}
-                                    whileHover={{
-                                        scale: 1.03,
-                                        boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.1), 0 4px 6px -4px rgba(16, 185, 129, 0.1)"
-                                    }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className="w-full h-20 border border-emerald-100 bg-emerald-50/10 hover:bg-white hover:border-emerald-400 rounded-xl p-3 flex gap-3 items-center cursor-pointer transition-colors duration-200 group"
-                                >
-                                    {/* Thumbnail Wrapper */}
-                                    <div className="w-12 h-12 flex-shrink-0 bg-emerald-50 rounded-lg overflow-hidden border border-emerald-100/50 group-hover:border-emerald-200 transition-colors">
-                                        {cat?.thumbnail ? (
-                                            <img
-                                                src={cat.thumbnail}
-                                                alt={cat?.category_name || "Category thumbnail"}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-emerald-100 text-emerald-700 font-bold text-sm">
-                                                {cat?.category_name?.charAt(0) || "C"}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Category Name */}
-                                    <div className="font-medium text-sm text-slate-700 group-hover:text-emerald-700 transition-colors line-clamp-2 pr-1">
-                                        {cat?.category_name}
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </motion.div>
-                    ) : (
-                        <div className="py-12 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
-                            <p className="text-center text-sm text-slate-400 font-medium">No categories found.</p>
-                        </div>
-                    )}
-                    <div className="block md:hidden">
-                        {categories.length > 0 ? (
+                {categories.length > 0 ? (
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="show"
+                        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+                    >
+                        {categories.map((cat, idx) => (
                             <motion.div
-                                variants={containerVariants}
-                                initial="hidden"
-                                animate="show"
-                                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+                                onClick={() => {
+                                    // Navigate to category products page with category data
+                                    navigate("/category/products", { state: { cat_name: cat.category_name, subcat_name: null } });
+                                }}
+                                key={cat?._id || idx}
+                                variants={itemVariants}
+                                whileHover={{
+                                    scale: 1.03,
+                                    boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.1), 0 4px 6px -4px rgba(16, 185, 129, 0.1)"
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                className="w-full h-20 border border-emerald-100 bg-emerald-50/10 hover:bg-white hover:border-emerald-400 rounded-xl p-3 flex gap-3 items-center cursor-pointer transition-colors duration-200 group"
                             >
-                                {categories.slice(0, 6).map((cat, idx) => (
-                                    <motion.div
-                                        key={cat?._id || idx}
-                                        variants={itemVariants}
-                                        whileHover={{
-                                            scale: 1.03,
-                                            boxShadow: "0 10px 15px -3px rgba(16, 185, 129, 0.1), 0 4px 6px -4px rgba(16, 185, 129, 0.1)"
-                                        }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className="w-full h-20 border border-emerald-100 bg-emerald-50/10 hover:bg-white hover:border-emerald-400 rounded-xl p-3 flex gap-3 items-center cursor-pointer transition-colors duration-200 group"
-                                    >
-                                        {/* Thumbnail Wrapper */}
-                                        <div className="w-12 h-12 flex-shrink-0 bg-emerald-50 rounded-lg overflow-hidden border border-emerald-100/50 group-hover:border-emerald-200 transition-colors">
-                                            {cat?.thumbnail ? (
-                                                <img
-                                                    src={cat.thumbnail}
-                                                    alt={cat?.category_name || "Category thumbnail"}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-emerald-100 text-emerald-700 font-bold text-sm">
-                                                    {cat?.category_name?.charAt(0) || "C"}
-                                                </div>
-                                            )}
+                                {/* Thumbnail Wrapper */}
+                                <div className="w-12 h-12 flex-shrink-0 bg-emerald-50 rounded-lg overflow-hidden border border-emerald-100/50 group-hover:border-emerald-200 transition-colors">
+                                    {cat?.thumbnail ? (
+                                        <img
+                                            src={cat.thumbnail}
+                                            alt={cat?.category_name || "Category thumbnail"}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-emerald-100 text-emerald-700 font-bold text-sm">
+                                            {cat?.category_name?.charAt(0) || "C"}
                                         </div>
+                                    )}
+                                </div>
 
-                                        {/* Category Name */}
-                                        <div className="font-medium text-sm text-slate-700 group-hover:text-emerald-700 transition-colors line-clamp-2 pr-1">
-                                            {cat?.category_name}
-                                        </div>
-                                    </motion.div>
-                                ))}
+                                {/* Category Name */}
+                                <div className="font-medium text-sm text-slate-700 group-hover:text-emerald-700 transition-colors line-clamp-2 pr-1">
+                                    {cat?.category_name}
+                                </div>
                             </motion.div>
-                        ) : (
-                            <div className="py-12 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
-                                <p className="text-center text-sm text-slate-400 font-medium">No categories found.</p>
-                            </div>
-                        )}
+                        ))}
+                    </motion.div>
+                ) : (
+                    <div className="py-12 border border-dashed border-slate-200 rounded-xl bg-slate-50/50">
+                        <p className="text-center text-sm text-slate-400 font-medium">No categories found.</p>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

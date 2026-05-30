@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useCategories from '../Hooks/Categories';
+import { useNavigate } from 'react-router-dom'; // নেভিগেশনের জন্য হুক ইম্পোর্ট
 import { FiChevronRight, FiGrid } from 'react-icons/fi';
 import { RiFireFill } from 'react-icons/ri';
 
@@ -8,14 +9,22 @@ const AsideBar = () => {
     const { isLoading, categories } = useCategories();
     const [activeCategory, setActiveCategory] = useState(null);
     const [hoveredSub, setHoveredSub] = useState(null);
+    const navigate = useNavigate(); // নেভিগেট ফাংশন ইনিশিয়ালাইজ
 
     const handleToggle = (id) => {
         setActiveCategory(prev => prev === id ? null : id);
     };
 
+    // সাব-ক্যাটাগরি ক্লিকের হ্যান্ডলার
+    const handleSubClick = (e, categoryName, subName) => {
+        e.stopPropagation(); // প্যারেন্ট বাটনের ক্লিক ইভেন্ট (handleToggle) আটকানোর জন্য
+
+        // navigate  and send category and subcategory as state
+        navigate(`/category/products`, { state: { cat_name: categoryName, subcat_name: subName } });
+    };
+
     return (
         <div className="relative w-full h-full bg-white overflow-hidden select-none flex flex-col ">
-
 
             {/* Header */}
             <div className="px-5 py-5 border-b border-slate-200 flex-shrink-0">
@@ -30,8 +39,8 @@ const AsideBar = () => {
             </div>
 
             {/* Navigation List */}
-            <div className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5
-                scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent hover:scrollbar-thumb-slate-400">
+            {/* scrollbar-thin সরিয়ে scrollbar-none অ্যাড করা হয়েছে যাতে স্ক্রোলবার হাইড থাকে */}
+            <div className="flex-1 overflow-y-auto hide-scrollbar px-3 py-3 space-y-0.5 scrollbar-none">
 
                 {isLoading ? (
                     // Skeleton
@@ -89,17 +98,6 @@ const AsideBar = () => {
                                         <span className="text-[12.5px] font-semibold tracking-wide truncate">
                                             {category?.category_name}
                                         </span>
-
-                                        {/* Hot badge */}
-                                        {/* {catIndex < 2 && (
-                                            <motion.span
-                                                animate={{ scale: [1, 1.15, 1] }}
-                                                transition={{ duration: 1.6, repeat: Infinity }}
-                                                className="text-green-500"
-                                            >
-                                                <RiFireFill size={11} />
-                                            </motion.span>
-                                        )} */}
                                     </div>
 
                                     {/* Right Side */}
@@ -140,6 +138,7 @@ const AsideBar = () => {
                                                 {category.subcategories.map((sub, idx) => (
                                                     <motion.button
                                                         key={idx}
+                                                        onClick={(e) => handleSubClick(e, category?.category_name, sub)} // ক্লিক করলে নেভিগেট করবে
                                                         initial={{ opacity: 0, x: -8 }}
                                                         animate={{ opacity: 1, x: 0 }}
                                                         transition={{ delay: idx * 0.04 }}

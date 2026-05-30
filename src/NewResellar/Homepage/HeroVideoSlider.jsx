@@ -332,7 +332,7 @@ const HeroVideoSlider = () => {
             <VideoModal item={modalItem} onClose={() => setModalItem(null)} />
 
             <section
-                className="relative m-4  rounded-xl shadow bg-white overflow-hidden"
+                className="relative mx-4 mt-4  rounded-xl shadow bg-white overflow-hidden"
                 style={{ paddingTop: isMobile ? 24 : 10, paddingBottom: isMobile ? 24 : 0 }}
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
