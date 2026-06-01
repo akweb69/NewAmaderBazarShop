@@ -27,7 +27,7 @@ const AsideBar = () => {
         <div className="relative w-full h-full bg-white overflow-hidden select-none flex flex-col ">
 
             {/* Header */}
-            <div className="px-5 py-5 border-b border-slate-200 flex-shrink-0">
+            {/* <div className="px-5 py-[22px] border-b border-slate-200 flex-shrink-0">
                 <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-lg bg-green-100 border border-green-200 flex items-center justify-center">
                         <FiGrid size={13} className="text-green-600" />
@@ -36,7 +36,7 @@ const AsideBar = () => {
                         Categories
                     </span>
                 </div>
-            </div>
+            </div> */}
 
             {/* Navigation List */}
             {/* scrollbar-thin সরিয়ে scrollbar-none অ্যাড করা হয়েছে যাতে স্ক্রোলবার হাইড থাকে */}

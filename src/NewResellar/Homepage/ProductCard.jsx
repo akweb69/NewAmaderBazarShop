@@ -49,10 +49,6 @@ const ProductCard = ({ product_id }) => {
 
                     {/* Content Area */}
                     <div className="flex flex-col gap-1.5 px-0.5">
-                        {/* Shop Name (Optional but adds professionalism) */}
-                        <p className="text-[11px] text-gray-400 tracking-wide uppercase font-medium">
-                            {productData?.shop_info?.shop_name || "Premium Store"}
-                        </p>
 
                         {/* Title */}
                         <h2 className="text-sm font-normal text-gray-800 line-clamp-2 min-h-[40px] leading-tight group-hover:text-green-500 transition-colors">
