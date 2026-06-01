@@ -141,55 +141,23 @@ const Cat_Prod_page = () => {
 
                 {/* Subcategories Horizontal Bar (Fully Responsive) */}
                 {mainCategoryFormState && subcategories.length > 0 && (
-                    <div className="relative flex flex-col md:flex-row md:items-center border-b border-gray-100 py-3 md:py-4 gap-2 group">
-                        <div className="relative w-full flex items-center">
-                            {/* Left Button */}
-                            <button
-                                onClick={() => handleScroll('left')}
-                                className="absolute -left-2 z-10 p-1.5 rounded-full bg-white text-gray-800 hover:bg-gray-100 border border-gray-200 transition-all shadow-sm opacity-0 group-hover:opacity-100 hidden md:block"
-                            >
-                                <FiChevronLeft size={16} />
-                            </button>
-
-                            {/* Scrollable Badges Container */}
-                            <div
-                                ref={scrollContainerRef}
-                                className="flex gap-2 overflow-x-auto scroll-smooth w-full py-1 snap-x no-scrollbar"
-                                style={{
-                                    scrollbarWidth: 'none',
-                                    msOverflowStyle: 'none'
-                                }}
-                            >
-                                <style>{`
-                                    .no-scrollbar::-webkit-scrollbar {
-                                        display: none;
-                                    }
-                                `}</style>
-
-                                {subcategories.map((subcat, idx) => {
-                                    const isSelected = subcat === subCategoryFormState;
-                                    return (
-                                        <button
-                                            key={idx}
-                                            onClick={() => handleSubcategoryClick(subcat)}
-                                            className={`text-xs px-3.5 py-1.5 rounded-full transition-all duration-200 whitespace-nowrap font-medium snap-start ${isSelected
-                                                ? 'bg-gray-950 text-white'
-                                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100 md:hover:bg-gray-100'
-                                                }`}
-                                        >
-                                            {subcat}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Right Button */}
-                            <button
-                                onClick={() => handleScroll('right')}
-                                className="absolute -right-2 z-10 p-1.5 rounded-full bg-white text-gray-800 hover:bg-gray-100 border border-gray-200 transition-all shadow-sm opacity-0 group-hover:opacity-100 hidden md:block"
-                            >
-                                <FiChevronRight size={16} />
-                            </button>
+                    <div className="border-b border-gray-100 py-3 md:py-4">
+                        <div className="flex flex-wrap gap-2 w-full">
+                            {subcategories.map((subcat, idx) => {
+                                const isSelected = subcat === subCategoryFormState;
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleSubcategoryClick(subcat)}
+                                        className={`text-[10px] px-3 py-1 rounded-full transition-all duration-200 font-medium ${isSelected
+                                            ? 'bg-green-700 text-white'
+                                            : 'bg-green-50 text-gray-800 hover:bg-gray-100'
+                                            }`}
+                                    >
+                                        {subcat}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
