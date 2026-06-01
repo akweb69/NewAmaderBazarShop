@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import useCategories from '../Hooks/Categories';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -13,11 +13,10 @@ const Cat_Prod_page = () => {
     const [showPerPage, setShowPerPage] = useState(36);
     const [page_number, setPageNumber] = useState(1);
     const [showingProducts, setShowingProducts] = useState([]);
-    const [totalProducts, setTotalProducts] = useState(0); // টোটাল প্রোডাক্ট কাউন্ট স্টেট
+    const [totalProducts, setTotalProducts] = useState(0);
     const [sortBy, setSortBy] = useState('default');
 
     const { categories, isLoading } = useCategories();
-    const scrollContainerRef = useRef(null);
 
     const mainCategoryFormState = location.state?.cat_name || null;
     const subCategoryFormState = location.state?.subcat_name || null;
@@ -26,13 +25,50 @@ const Cat_Prod_page = () => {
         (cat) => cat.category_name?.trim().toLowerCase() === mainCategoryFormState?.trim().toLowerCase()
     );
 
-    const subcategories = currentCategoryData?.subcategories || [];
+    // scroll to top on category change
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [mainCategoryFormState, subCategoryFormState]);
 
-    // টোটাল পেজ সংখ্যা ক্যালকুলেশন
+    const subcategories = currentCategoryData?.subcategories || [];
     const totalPages = Math.ceil(totalProducts / showPerPage);
+
+    // ফ্রন্টএন্ড সোর্টিং লজিক ফাংশন
+    const sortProductsLocally = (productsList, sortOption) => {
+        const sorted = [...productsList];
+
+        if (sortOption === 'price_low') {
+            // sku এর সর্বনিম্ন sell_price অনুযায়ী ছোট থেকে বড় সোর্ট
+            sorted.sort((a, b) => {
+                const priceA = a.sku && a.sku.length > 0 ? Math.min(...a.sku.map(s => s.sell_price || 0)) : 0;
+                const priceB = b.sku && b.sku.length > 0 ? Math.min(...b.sku.map(s => s.sell_price || 0)) : 0;
+                return priceA - priceB;
+            });
+        } else if (sortOption === 'price_high') {
+            // sku এর সর্বোচ্চ sell_price অনুযায়ী বড় থেকে ছোট সোর্ট
+            sorted.sort((a, b) => {
+                const priceA = a.sku && a.sku.length > 0 ? Math.max(...a.sku.map(s => s.sell_price || 0)) : 0;
+                const priceB = b.sku && b.sku.length > 0 ? Math.max(...b.sku.map(s => s.sell_price || 0)) : 0;
+                return priceB - priceA;
+            });
+        } else if (sortOption === 'best_selling') {
+            // মেইন অবজেক্টের sell_count অথবা sku এর টোটাল sell_count এর ভিত্তিতে সোর্ট
+            sorted.sort((a, b) => {
+                const sellA = a.sell_count || (a.sku ? a.sku.reduce((acc, s) => acc + (s.sell_count || 0), 0) : 0);
+                const sellB = b.sell_count || (b.sku ? b.sku.reduce((acc, s) => acc + (s.sell_count || 0), 0) : 0);
+                return sellB - sellA;
+            });
+        } else if (sortOption === 'alphabetical') {
+            // টাইটেল অনুযায়ী A-Z সোর্ট
+            sorted.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+        }
+
+        return sorted;
+    };
 
     const fetchProducts = async () => {
         try {
+            // এখানে url থেকে sort প্যারামিটার বাদ দেওয়া হয়েছে কারণ আমরা সোর্টিং ফ্রন্টএন্ডে করছি
             let url = `${base_url}/products?page=${page_number}&limit=${showPerPage}`;
 
             if (mainCategoryFormState) {
@@ -41,23 +77,24 @@ const Cat_Prod_page = () => {
             if (subCategoryFormState) {
                 url += `&subcategory=${encodeURIComponent(subCategoryFormState)}`;
             }
-            if (sortBy !== 'default') {
-                url += `&sort=${sortBy}`;
-            }
 
             const res = await axios.get(url);
 
-            // আপনার API রেসপন্স ফরম্যাট অনুযায়ী ডেটা সেটআপ
             if (res.data) {
-                setShowingProducts(Array.isArray(res.data) ? res.data : res.data.products || []);
-                setTotalProducts(res.data.totalCount || res.data.total || (Array.isArray(res.data) ? res.data.length : 100));
+                const rawProducts = Array.isArray(res.data) ? res.data : res.data.products || [];
+
+                // ডেটা পাওয়ার সাথে সাথে সোর্ট ফাংশন কল করা হচ্ছে
+                const sortedProducts = sortProductsLocally(rawProducts, sortBy);
+
+                setShowingProducts(sortedProducts);
+                setTotalProducts(res.data.totalCount || res.data.total || rawProducts.length);
             }
         } catch (error) {
             console.error("Error loading products", error);
         }
     };
 
-    // ক্যাটাগরি বা ফিল্টার চেঞ্জ হলে পেজ নাম্বার ১ এ রিসেট করার জন্য
+    // ক্যাটাগরি চেঞ্জ হলে পেজ ১ এ রিসেট করার জন্য
     useEffect(() => {
         setPageNumber(1);
     }, [mainCategoryFormState, subCategoryFormState, sortBy, showPerPage]);
@@ -65,16 +102,6 @@ const Cat_Prod_page = () => {
     useEffect(() => {
         fetchProducts();
     }, [mainCategoryFormState, subCategoryFormState, page_number, showPerPage, sortBy]);
-
-    const handleScroll = (direction) => {
-        if (scrollContainerRef.current) {
-            const scrollAmount = 240;
-            scrollContainerRef.current.scrollBy({
-                left: direction === 'left' ? -scrollAmount : scrollAmount,
-                behavior: 'smooth'
-            });
-        }
-    };
 
     const handleSubcategoryClick = (subCatName) => {
         navigate(location.pathname, {
@@ -85,7 +112,6 @@ const Cat_Prod_page = () => {
         });
     };
 
-    // পেজ চেঞ্জ হ্যান্ডলার (ক্লিক করলে পেজ চেঞ্জ হবে এবং স্মুথলি স্ক্রিন টপে যাবে)
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setPageNumber(newPage);
@@ -139,7 +165,7 @@ const Cat_Prod_page = () => {
                     </div>
                 </div>
 
-                {/* Subcategories Horizontal Bar (Fully Responsive) */}
+                {/* Subcategories Horizontal Bar */}
                 {mainCategoryFormState && subcategories.length > 0 && (
                     <div className="border-b border-gray-100 py-3 md:py-4">
                         <div className="flex flex-wrap gap-2 w-full">
@@ -149,9 +175,7 @@ const Cat_Prod_page = () => {
                                     <button
                                         key={idx}
                                         onClick={() => handleSubcategoryClick(subcat)}
-                                        className={`text-[10px] px-3 py-1 rounded-full transition-all duration-200 font-medium ${isSelected
-                                            ? 'bg-green-700 text-white'
-                                            : 'bg-green-50 text-gray-800 hover:bg-gray-100'
+                                        className={`text-[10px] px-3 py-1 rounded-full transition-all duration-200 font-medium ${isSelected ? 'bg-green-700 text-white' : 'bg-green-50 text-gray-800 hover:bg-gray-100'
                                             }`}
                                     >
                                         {subcat}
@@ -184,10 +208,9 @@ const Cat_Prod_page = () => {
                 </div>
             </div>
 
-            {/* Premium Minimal Pagination System */}
+            {/* Pagination System */}
             {!isLoading && totalPages > 1 && (
                 <div className="flex items-center justify-center gap-1.5 pt-16 pb-4">
-                    {/* Previous Button */}
                     <button
                         onClick={() => handlePageChange(page_number - 1)}
                         disabled={page_number === 1}
@@ -196,17 +219,10 @@ const Cat_Prod_page = () => {
                         <FiChevronLeft size={16} />
                     </button>
 
-                    {/* Page Numbers Dynamic Render */}
                     <div className="flex items-center gap-1">
                         {Array.from({ length: totalPages }).map((_, index) => {
                             const pageNum = index + 1;
-                            // শুধুমাত্র কারেন্ট পেজের আশেপাশের ৩/৪ টি পেজ দেখানোর জন্য কন্ডিশন (প্রয়োজনীয় বড় ডেটাসেটের ক্ষেত্রে)
-                            if (
-                                totalPages > 5 &&
-                                pageNum !== 1 &&
-                                pageNum !== totalPages &&
-                                Math.abs(page_number - pageNum) > 1
-                            ) {
+                            if (totalPages > 5 && pageNum !== 1 && pageNum !== totalPages && Math.abs(page_number - pageNum) > 1) {
                                 if (pageNum === 2 && page_number > 3) return <span key={pageNum} className="text-xs text-gray-300 px-1">...</span>;
                                 if (pageNum === totalPages - 1 && page_number < totalPages - 2) return <span key={pageNum} className="text-xs text-gray-300 px-1">...</span>;
                                 return null;
@@ -216,9 +232,7 @@ const Cat_Prod_page = () => {
                                 <button
                                     key={pageNum}
                                     onClick={() => handlePageChange(pageNum)}
-                                    className={`text-xs min-w-[32px] h-8 font-medium rounded transition-all ${page_number === pageNum
-                                        ? 'bg-gray-950 text-white'
-                                        : 'text-gray-600 hover:bg-gray-50'
+                                    className={`text-xs min-w-[32px] h-8 font-medium rounded transition-all ${page_number === pageNum ? 'bg-gray-950 text-white' : 'text-gray-600 hover:bg-gray-50'
                                         }`}
                                 >
                                     {pageNum}
@@ -227,7 +241,6 @@ const Cat_Prod_page = () => {
                         })}
                     </div>
 
-                    {/* Next Button */}
                     <button
                         onClick={() => handlePageChange(page_number + 1)}
                         disabled={page_number === totalPages}
