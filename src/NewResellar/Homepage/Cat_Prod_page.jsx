@@ -120,7 +120,7 @@ const Cat_Prod_page = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-4 md:py-8 bg-white min-h-screen flex flex-col justify-between">
+        <div className="w-full mx-auto px-4 py-4 md:py-8 bg-white min-h-screen flex flex-col justify-between">
             <div>
                 {/* Header: Title & Sort Options */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-gray-100">
