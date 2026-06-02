@@ -56,7 +56,7 @@ const ProductSection = () => {
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
                     {allProducts?.map((prod) => (
                         <div key={prod._id}>
-                            <ProductCard product_id={prod._id} />
+                            <ProductCard product={prod} />
                         </div>
                     ))}
                 </div>

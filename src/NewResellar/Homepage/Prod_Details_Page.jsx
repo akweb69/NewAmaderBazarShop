@@ -285,7 +285,7 @@ const Prod_Details_Page = () => {
                     </h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8">
                         {relatedProducts.map((prod) => (
-                            <ProductCard key={prod._id} product_id={prod._id} />
+                            <ProductCard key={prod._id} product={prod} />
                         ))}
                     </div>
                 </div>

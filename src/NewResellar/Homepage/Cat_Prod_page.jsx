@@ -198,7 +198,7 @@ const Cat_Prod_page = () => {
                         ))
                     ) : showingProducts.length > 0 ? (
                         showingProducts.map((prod) => (
-                            <ProductCard key={prod._id} product_id={prod._id} />
+                            <ProductCard key={prod._id} product={prod} />
                         ))
                     ) : (
                         <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
