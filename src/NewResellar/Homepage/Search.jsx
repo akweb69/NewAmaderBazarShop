@@ -10,19 +10,20 @@ const Search = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Pagination States
+    // Pagination & Sorting States
     const [page, setPage] = useState(1);
+    const [sortBy, setSortBy] = useState(''); // ডিফল্ট বা ফাকা মানে 'Relevance/Best Match'
     const limit = 30;
 
-    // ডেটা ফেচিং ফাংশন (useCallback দিয়ে র‍্যাপ করা হয়েছে পারফরম্যান্সের জন্য)
-    const fetchProducts = useCallback(async (searchText, currentPage) => {
+    // ডেটা ফেচিং ফাংশন
+    const fetchProducts = useCallback(async (searchText, currentPage, currentSort) => {
         if (!searchText) return;
 
         setLoading(true);
         setError(null);
         try {
             const response = await fetch(
-                `http://localhost:5000/search?q=${encodeURIComponent(searchText)}&page=${currentPage}&limit=${limit}`
+                `http://localhost:5000/search?q=${encodeURIComponent(searchText)}&page=${currentPage}&limit=${limit}&sortBy=${currentSort}`
             );
 
             if (!response.ok) {
@@ -42,31 +43,73 @@ const Search = () => {
     // যখনই নতুন কোনো কিওয়ার্ড দিয়ে সার্চ করা হবে
     useEffect(() => {
         if (stateValue) {
-            setPage(1); // নতুন সার্চে পেজ সব সময় ১ হবে
-            fetchProducts(stateValue, 1);
+            setPage(1);
+            setSortBy(''); // নতুন সার্চে সর্ট অপশন ডিফল্ট করে দেওয়া হলো
+            fetchProducts(stateValue, 1, '');
         } else {
             setProducts([]);
         }
     }, [stateValue, fetchProducts]);
 
-    // যখন ইউজার Next বা Previous পেজে ক্লিক করবে
+    // যখন ইউজার Next/Previous পেজ অথবা Sorting অপশন চেঞ্জ করবে
     useEffect(() => {
-        if (stateValue && page > 1) {
-            fetchProducts(stateValue, page);
-        } else if (stateValue && page === 1) {
-            fetchProducts(stateValue, 1);
+        if (stateValue && (page > 1 || sortBy !== '')) {
+            fetchProducts(stateValue, page, sortBy);
+        } else if (stateValue && page === 1 && sortBy === '') {
+            fetchProducts(stateValue, 1, '');
         }
-    }, [page, stateValue, fetchProducts]);
+    }, [page, sortBy, stateValue, fetchProducts]);
+
+    // সর্ট হ্যান্ডেলার ফাংশন
+    const handleSortChange = (e) => {
+        setSortBy(e.target.value);
+        setPage(1); // সর্ট চেঞ্জ হলে সব সময় ১ম পেজ থেকে ডাটা আসবে
+    };
 
     return (
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen bg-gray-50 text-gray-800">
-            {/* সার্চ হেডার */}
-            <div className="mb-6">
-                <h1 className="text-xl md:text-2xl font-bold text-gray-800">
-                    Search Results for: <span className="text-green-600">"{stateValue}"</span>
-                </h1>
-                {!loading && products.length > 0 && (
-                    <p className="text-sm text-gray-500 mt-1">Showing page {page}</p>
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-8 min-h-screen bg-gray-50 text-gray-800">
+
+            {/* সার্চ হেডার এবং সর্টিং ড্রপডাউন */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-green-200 mb-8 w-full">
+                {/* Left Side: Search Term & Page Count */}
+                <div className="flex flex-row sm:flex-col justify-between items-center sm:items-start w-full sm:w-auto">
+                    <h1 className="text-sm md:text-base font-semibold text-gray-800 truncate max-w-[200px] xs:max-w-[300px] md:max-w-none">
+                        Search Results for: <span className="text-green-600">"{stateValue}"</span>
+                    </h1>
+                    {!loading && products.length > 0 && (
+                        <p className="text-xs md:text-sm text-gray-500 bg-gray-100 sm:bg-transparent px-2 py-0.5 sm:px-0 sm:py-0 rounded-md sm:mt-1 font-medium">
+                            Page {page}
+                        </p>
+                    )}
+                </div>
+
+                {/* Right Side: Sorting Dropdown UI */}
+                {products.length > 0 && (
+                    <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t border-gray-100 sm:border-t-0">
+                        <label htmlFor="sort" className="text-xs md:text-sm font-medium text-gray-600 whitespace-nowrap">
+                            Sort By:
+                        </label>
+                        <div className="relative w-full sm:w-auto min-w-[160px]">
+                            <select
+                                id="sort"
+                                value={sortBy}
+                                onChange={handleSortChange}
+                                className="w-full bg-white border border-gray-200 text-gray-700 py-2 pl-3 pr-8 rounded-xl text-xs md:text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 cursor-pointer transition-all appearance-none"
+                            >
+                                <option value="">Best Match (Relevance)</option>
+                                <option value="priceLow">Price: Low to High</option>
+                                <option value="priceHigh">Price: High to Low</option>
+                                <option value="az">Alphabetical: A-Z</option>
+                                <option value="za">Alphabetical: Z-A</option>
+                            </select>
+                            {/* Custom SVG arrow to keep select clean across different devices */}
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
 
@@ -83,7 +126,7 @@ const Search = () => {
                 <div className="text-center py-12 bg-red-50 rounded-2xl border border-red-100 my-4">
                     <p className="text-red-600 font-semibold">{error}</p>
                     <button
-                        onClick={() => fetchProducts(stateValue, page)}
+                        onClick={() => fetchProducts(stateValue, page, sortBy)}
                         className="mt-4 px-5 py-2 bg-red-600 text-white rounded-xl text-sm font-medium shadow"
                     >
                         Try Again
